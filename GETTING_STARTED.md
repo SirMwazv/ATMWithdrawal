@@ -46,6 +46,8 @@ docker compose down
 
 ### Option 2: Run Locally (Development)
 
+**Note for macOS users**: Port 5000 is used by AirPlay Receiver. The project is configured to use port 5001 by default (see `backend/API/Properties/launchSettings.json`). If you still encounter port conflicts, you can kill the process: `lsof -ti:5000 | xargs kill -9`
+
 #### Step 1: Start the Backend
 
 ```bash
@@ -54,7 +56,7 @@ dotnet restore
 dotnet run --project API/API.csproj
 ```
 
-Backend will start on http://localhost:5001
+Backend will start on http://localhost:5001 (Swagger enabled at http://localhost:5001)
 
 Keep this terminal running and open a new terminal for the frontend.
 
