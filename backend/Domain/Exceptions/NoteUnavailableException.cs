@@ -8,7 +8,7 @@ public class NoteUnavailableException : Exception
     public decimal RequestedAmount { get; }
 
     public NoteUnavailableException(decimal amount)
-        : base($"Cannot dispense {amount:C}. The amount cannot be formed with available notes (100, 50, 20, 10).")
+        : base(FormatMessage(amount))
     {
         RequestedAmount = amount;
     }
@@ -22,5 +22,12 @@ public class NoteUnavailableException : Exception
         : base(message, innerException)
     {
         RequestedAmount = amount;
+    }
+
+    private static string FormatMessage(decimal amount)
+    {
+        // Default currency symbol is R for Rands
+        // This can be made configurable via dependency injection if needed
+        return $"Cannot dispense R{amount:F2}. The amount cannot be formed with available notes (100, 50, 20, 10).";
     }
 }

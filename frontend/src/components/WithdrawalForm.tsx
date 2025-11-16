@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { withdrawalApi, WithdrawalResponse, ErrorResponse } from '../api/withdrawalApi';
+import { formatCurrency, getCurrencySymbol } from '../config/currency';
 import './WithdrawalForm.css';
 
 /**
@@ -55,7 +56,7 @@ export function WithdrawalForm() {
     if (notes.length === 0) {
       return 'No notes';
     }
-    return notes.map(note => `$${note.toFixed(2)}`).join(' + ');
+    return notes.map(note => formatCurrency(note, 2)).join(' + ');
   };
 
   /**
@@ -79,7 +80,7 @@ export function WithdrawalForm() {
 
         <form onSubmit={handleSubmit} className="withdrawal-form">
           <div className="input-group">
-            <span className="currency-symbol">$</span>
+            <span className="currency-symbol">{getCurrencySymbol()}</span>
             <input
               type="text"
               inputMode="decimal"
@@ -117,7 +118,7 @@ export function WithdrawalForm() {
             <div className="result-content">
               <div className="total-amount">
                 <span className="label">Total Amount:</span>
-                <span className="value">${result.totalAmount.toFixed(2)}</span>
+                <span className="value">{formatCurrency(result.totalAmount)}</span>
               </div>
 
               <div className="notes-summary">
@@ -132,7 +133,7 @@ export function WithdrawalForm() {
                     <div key={note} className="note-item">
                       <div className="note-visual">
                         <span className="note-count">×{count}</span>
-                        <span className="note-value">${note.toFixed(0)}</span>
+                        <span className="note-value">{formatCurrency(note, 0)}</span>
                       </div>
                     </div>
                   ))}
@@ -157,7 +158,7 @@ export function WithdrawalForm() {
         )}
 
         <div className="info-section">
-          <p className="info-text">Available notes: $100, $50, $20, $10</p>
+          <p className="info-text">Available notes: {formatCurrency(100, 0)}, {formatCurrency(50, 0)}, {formatCurrency(20, 0)}, {formatCurrency(10, 0)}</p>
         </div>
       </div>
     </div>
