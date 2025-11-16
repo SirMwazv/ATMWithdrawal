@@ -2,18 +2,35 @@
 
 ## 🎯 Quick Start
 
-### Option 1: Docker (Recommended - All Platforms)
+### Prerequisites
 
-If you have Docker installed, this is the easiest way to run everything:
+Before you begin, ensure you have one of the following installed:
+
+**Option 1 (Recommended):**
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
+
+**Option 2 (Local Development):**
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js 20+](https://nodejs.org/) (includes npm)
+
+### Clone the Repository
 
 ```bash
-cd /Users/mwazvitamutowo/ATMWithdrawal
+git clone https://github.com/SirMwazv/ATMWithdrawal.git
+cd ATMWithdrawal
+```
+
+### Option 1: Docker (Recommended - All Platforms)
+
+This is the easiest way to run everything with one command:
+
+```bash
 docker compose up --build
 ```
 
 **Note**: If `docker compose` doesn't work, try:
 - `docker-compose up --build` (older Docker versions)
-- Or install Docker Desktop which includes Docker Compose
+- Or ensure Docker Desktop is installed and running
 
 Once running:
 - Frontend: http://localhost:3000
@@ -22,30 +39,41 @@ Once running:
 
 **Note about Port 5001**: We use port 5001 instead of the default 5000 because macOS uses port 5000 for AirPlay Receiver (ControlCenter). This is a common conflict on macOS systems. If you're on a different platform where 5000 is available, you can change it back in `docker-compose.yml`.
 
+To stop the containers:
+```bash
+docker compose down
+```
+
 ### Option 2: Run Locally (Development)
 
-#### Backend
+#### Step 1: Start the Backend
+
 ```bash
-cd /Users/mwazvitamutowo/ATMWithdrawal/backend
+cd backend
 dotnet restore
 dotnet run --project API/API.csproj
 ```
 
 Backend will start on http://localhost:5001
 
-#### Frontend
+Keep this terminal running and open a new terminal for the frontend.
+
+#### Step 2: Start the Frontend
+
 ```bash
-cd /Users/mwazvitamutowo/ATMWithdrawal/frontend
+cd frontend
 npm install
 npm run dev
 ```
 
 Frontend will start on http://localhost:5173
 
+The frontend will automatically connect to the backend at port 5001.
+
 ## 🧪 Running Tests
 
 ```bash
-cd /Users/mwazvitamutowo/ATMWithdrawal/backend
+cd backend
 dotnet test
 ```
 
