@@ -57,7 +57,11 @@ builder.Services.AddLogging(logging =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
+// Enable Swagger in Development or when ENABLE_SWAGGER is set to true
+var enableSwagger = app.Environment.IsDevelopment() || 
+                    bool.TryParse(builder.Configuration["ENABLE_SWAGGER"], out var enabled) && enabled;
+
+if (enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>

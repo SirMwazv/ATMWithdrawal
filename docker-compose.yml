@@ -8,19 +8,14 @@ services:
       dockerfile: Dockerfile
     container_name: atm-withdrawal-api
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:5000
+      - ENABLE_SWAGGER=true
     networks:
       - atm-network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/withdrawal/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   # Frontend React app service
   frontend:
@@ -28,13 +23,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://localhost:5000/api
+        - VITE_API_URL=http://localhost:5001/api
     container_name: atm-withdrawal-frontend
     ports:
       - "3000:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
       - atm-network
     restart: unless-stopped

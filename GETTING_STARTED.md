@@ -17,8 +17,10 @@ docker compose up --build
 
 Once running:
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
-- Swagger UI: http://localhost:5000
+- Backend API: http://localhost:5001
+- Swagger UI: http://localhost:5001
+
+**Note about Port 5001**: We use port 5001 instead of the default 5000 because macOS uses port 5000 for AirPlay Receiver (ControlCenter). This is a common conflict on macOS systems. If you're on a different platform where 5000 is available, you can change it back in `docker-compose.yml`.
 
 ### Option 2: Run Locally (Development)
 
@@ -29,7 +31,7 @@ dotnet restore
 dotnet run --project API/API.csproj
 ```
 
-Backend will start on http://localhost:5000
+Backend will start on http://localhost:5001
 
 #### Frontend
 ```bash
@@ -109,12 +111,12 @@ The system uses a **greedy algorithm** to dispense the minimum number of notes:
 3. Move to the next smaller note (50, then 20, then 10)
 4. Repeat until the amount is satisfied
 
-**Example: $170**
+**Example: R170**
 ```
-Step 1: $100 → Remaining: $70
-Step 2: $50  → Remaining: $20
-Step 3: $20  → Remaining: $0
-Result: [$100, $50, $20] (3 notes)
+Step 1: R100 → Remaining: R70
+Step 2: R50  → Remaining: R20
+Step 3: R20  → Remaining: R0
+Result: [R100, R50, R20] (3 notes)
 ```
 
 ### Business Rules
@@ -151,7 +153,7 @@ Result: [$100, $50, $20] (3 notes)
 **Error Response (400):**
 ```json
 {
-  "message": "Cannot dispense $125.00. The amount cannot be formed with available notes.",
+  "message": "Cannot dispense R125.00. The amount cannot be formed with available notes.",
   "errorType": "NoteUnavailable",
   "statusCode": 400
 }
@@ -161,11 +163,11 @@ Result: [$100, $50, $20] (3 notes)
 
 ### UI Components
 
-1. **Input Field**: Clean currency input with $ symbol
+1. **Input Field**: Clean currency input with R symbol (Rands)
 2. **Submit Button**: Loading spinner during API calls
 3. **Success Display**:
    - Total amount
-   - Note formula (e.g., $50 + $20 + $10)
+   - Note formula (e.g., R50 + R20 + R10)
    - Visual note breakdown with counts
 4. **Error Display**: Clear error messages with icons
 
@@ -290,7 +292,7 @@ Coverage:
 
 ### Example 1: Valid Withdrawal
 ```bash
-curl -X POST http://localhost:5000/api/withdrawal \
+curl -X POST http://localhost:5001/api/withdrawal \
   -H "Content-Type: application/json" \
   -d '{"amount": 30}'
 
@@ -299,16 +301,16 @@ curl -X POST http://localhost:5000/api/withdrawal \
 
 ### Example 2: Invalid Amount
 ```bash
-curl -X POST http://localhost:5000/api/withdrawal \
+curl -X POST http://localhost:5001/api/withdrawal \
   -H "Content-Type: application/json" \
   -d '{"amount": 125}'
 
-# Response: {"message":"Cannot dispense $125.00...","errorType":"NoteUnavailable"}
+# Response: {"message":"Cannot dispense R125.00...","errorType":"NoteUnavailable"}
 ```
 
 ### Example 3: Negative Amount
 ```bash
-curl -X POST http://localhost:5000/api/withdrawal \
+curl -X POST http://localhost:5001/api/withdrawal \
   -H "Content-Type: application/json" \
   -d '{"amount": -50}'
 
@@ -356,6 +358,15 @@ docker --version
 sudo docker compose up --build
 ```
 
+### Port 5000 already in use (macOS)
+```bash
+# This is common on macOS due to AirPlay Receiver using port 5000
+# The project is already configured to use port 5001
+# If you need to change ports, edit docker-compose.yml:
+#   ports:
+#     - "YOUR_PORT:5000"  # Change YOUR_PORT to desired port
+```
+
 ### Tests fail
 ```bash
 # Clean and rebuild
@@ -374,10 +385,7 @@ To extend this project, consider:
 3. **Add Caching**: Redis for performance
 4. **Add Monitoring**: Application Insights, logging
 5. **Add CI/CD**: GitHub Actions, Azure DevOps
-6. **Add More Notes**: Support for $1, $5 denominations
+6. **Add More Notes**: Support for R5, R200 denominations
 7. **Add Balance**: Track ATM balance and inventory
 8. **Add Receipts**: PDF generation for transactions
-
----
-
-**Built with ❤️ using ASP.NET Core, React, TypeScript, and Docker**
+9. **Multi-Currency**: Support different currencies via configuration (already centralized in `frontend/src/config/currency.ts` and `backend/API/Config/CurrencyConfig.cs`)
